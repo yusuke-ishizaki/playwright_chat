@@ -9,7 +9,7 @@ from langchain_core.prompts import ChatPromptTemplate
 
 from models.scenario import BrowserScenario, BrowserAction
 
-from playwright_stealth import stealth
+from playwright_stealth import stealth_async
 
 class BrowserAgent:
     def __init__(self, headless: bool = True):
@@ -40,7 +40,7 @@ class BrowserAgent:
             user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
         )
         self.page = await self.context.new_page()
-        await stealth(self.page)
+        await stealth_async(self.page)
         return self.context
 
     async def stop(self):
