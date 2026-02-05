@@ -9,19 +9,21 @@ from langchain_core.prompts import ChatPromptTemplate
 
 from models.scenario import BrowserScenario, BrowserAction
 
-from playwright_stealth import stealth_async
+from playwright_stealth import Stealth
 
 class BrowserAgent:
     def __init__(self, headless: bool = True):
         self.headless = headless
+        self._playwright_context_manager = None
+        self.playwright = None
         self.browser: Browser | None = None
         self.context: BrowserContext | None = None
         self.page: Page | None = None
-        self.playwright = None
 
     async def start(self):
-        """Start the Playwright browser."""
-        self.playwright = await async_playwright().start()
+        """Start the Playwright browser with stealth."""
+        self._playwright_context_manager = Stealth().use_async(async_playwright())
+        self.playwright = await self._playwright_context_manager.__aenter__()
         self.browser = await self.playwright.chromium.launch(headless=self.headless)
 
     async def create_context(self) -> BrowserContext:
@@ -40,17 +42,25 @@ class BrowserAgent:
             user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
         )
         self.page = await self.context.new_page()
-        await stealth_async(self.page)
+        # Stealth is now applied globally, no need to apply it per page
         return self.context
 
     async def stop(self):
         """Stop the browser and close context."""
         if self.context:
-            await self.context.close()
+            try:
+                await self.context.close()
+            except Exception:
+                pass # Ignore errors if context is already closed
         if self.browser:
             await self.browser.close()
-        if self.playwright:
-            await self.playwright.stop()
+        if self._playwright_context_manager:
+            await self._playwright_context_manager.__aexit__(None, None, None)
+        
+        self.context = None
+        self.browser = None
+        self.playwright = None
+        self._playwright_context_manager = None
 
     async def execute_step(self, step: BrowserAction) -> str:
         """Execute a single step of the scenario."""
@@ -88,7 +98,9 @@ class BrowserAgent:
     async def execute_scenario(self, scenario: BrowserScenario) -> Dict[str, Any]:
         """Execute the entire scenario."""
         results = []
-        await self.create_context()
+        video_path = None
+        if not self.context:
+            await self.create_context()
         
         try:
             for step in scenario.steps:
@@ -97,11 +109,10 @@ class BrowserAgent:
                 # Small pause to ensure video captures the state
                 await asyncio.sleep(0.5) 
         finally:
-            # Close context to save video
-            await self.context.close()
-            
-            # Find the latest video file
-            video_path = await self.page.video.path()
+            # The context will be closed by the stop() method later.
+            # We just need to get the path to the video.
+            if self.page and self.page.video:
+                 video_path = await self.page.video.path()
             
         return {
             "results": results,

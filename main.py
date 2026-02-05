@@ -265,6 +265,7 @@ if st.session_state.agent_state == "ready_to_execute":
             st.session_state.execution_results = results
             st.session_state.agent_state = "finished"
             status_container.update(label="実行完了！", state="complete", expanded=False)
+            await agent.stop() # Ensure cleanup happens on success too
             st.rerun()
             
         except Exception as e:
