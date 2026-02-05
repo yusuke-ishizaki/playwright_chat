@@ -14,6 +14,10 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     cmake \
     build-essential \
+    pkg-config \
+    libssl-dev \
+    zlib1g-dev \
+    libffi-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # 設定ファイルのコピー

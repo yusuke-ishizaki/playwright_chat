@@ -13,5 +13,6 @@ dependencies = [
     "playwright-stealth>=2.0.0",
     "pydantic>=2.12.4",
     "python-dotenv>=1.2.1",
-    "streamlit>=1.51.0",
+    "streamlit>=1.50",
+    "pyarrow<21",
 ]
