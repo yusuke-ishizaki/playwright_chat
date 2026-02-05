@@ -36,3 +36,4 @@ libhyphen0
 libmanette-0.2-0
 libgles2
 libx264-164
+libwoff2dec.so.1.0.2   
