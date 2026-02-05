@@ -259,7 +259,7 @@ if st.session_state.agent_state == "ready_to_execute":
             # For a better UX, we could pass a callback to the agent.
             status_container.write("ブラウザを初期化中...")
             
-            results = await agent.execute_scenario(st.session_session.current_scenario)
+            results = await agent.execute_scenario(st.session_state.current_scenario)
             
             st.session_state.execution_results = results
             st.session_state.agent_state = "finished"
