@@ -1,6 +1,6 @@
 # Playwright公式イメージを使用（Ubuntu Jammyベース）
 # これにより、ブラウザの実行に必要なすべてのシステム依存関係が含まれます
-FROM mcr.microsoft.com/playwright/python:v1.50.1-jammy
+FROM mcr.microsoft.com/playwright/python:v1.57.0-jammy
 
 # インストールされるPythonのバージョンはイメージに依存しますが、
 # 通常は最新または安定版が含まれています
