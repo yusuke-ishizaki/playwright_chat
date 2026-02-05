@@ -17,8 +17,7 @@ from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
 # Apply nest_asyncio to allow async execution in Streamlit
-if not nest_asyncio.is_applied():
-    nest_asyncio.apply()
+nest_asyncio.apply()
 
 # Load environment variables
 # Try st.secrets first (for Streamlit Cloud), then fall back to .env (for local development)
