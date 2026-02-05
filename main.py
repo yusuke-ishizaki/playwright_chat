@@ -6,6 +6,9 @@ import nest_asyncio
 from dotenv import load_dotenv
 from typing import List
 
+# Install Playwright browsers (important for Streamlit Cloud deployment)
+os.system("playwright install")
+
 from models.scenario import BrowserScenario
 from agents.browser_agent import BrowserAgent
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -256,7 +259,7 @@ if st.session_state.agent_state == "ready_to_execute":
             # For a better UX, we could pass a callback to the agent.
             status_container.write("ブラウザを初期化中...")
             
-            results = await agent.execute_scenario(st.session_state.current_scenario)
+            results = await agent.execute_scenario(st.session_session.current_scenario)
             
             st.session_state.execution_results = results
             st.session_state.agent_state = "finished"
@@ -291,4 +294,3 @@ if st.session_state.agent_state == "finished":
         images = sorted([os.path.join(screenshots_dir, f) for f in os.listdir(screenshots_dir) if f.endswith(".png")])
         if images:
             st.image(images, caption=[os.path.basename(img) for img in images], width=600)
-
