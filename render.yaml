@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: playwright-chat
+    runtime: docker
+    plan: free # or your preferred plan
+    region: singapore # or your preferred region
+    envVars:
+      - key: GOOGLE_API_KEY
+        sync: false # Set this manually in Render dashboard
+    autoDeploy: true
