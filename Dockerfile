@@ -12,6 +12,7 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y \
+    cmake \
     && rm -rf /var/lib/apt/lists/*
 
 # 設定ファイルのコピー
