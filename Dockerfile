@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     zlib1g-dev \
     libffi-dev \
+    python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # 設定ファイルのコピー
