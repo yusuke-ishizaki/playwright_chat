@@ -11,6 +11,11 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 # 作業ディレクトリの設定
 WORKDIR /app
 
+RUN apt-get update && apt-get install -y \
+    cmake \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
 # 設定ファイルのコピー
 COPY pyproject.toml uv.lock ./
 
@@ -23,7 +28,7 @@ ENV PATH="/app/.venv/bin:$PATH"
 # Playwrightブラウザのインストール
 # 注: 公式イメージには既にブラウザが含まれていますが、
 # Pythonパッケージのバージョンと一致させるために念のため実行します
-RUN playwright install chromium
+# RUN playwright install chromium
 
 # アプリケーションコードのコピー
 COPY . .
