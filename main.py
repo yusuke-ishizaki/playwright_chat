@@ -5,6 +5,7 @@ import asyncio
 import nest_asyncio
 from dotenv import load_dotenv
 from typing import List
+import traceback
 
 # Install Playwright browsers (important for Streamlit Cloud deployment)
 os.system("playwright install")
@@ -268,6 +269,7 @@ if st.session_state.agent_state == "ready_to_execute":
             
         except Exception as e:
             st.error(f"実行失敗: {e}")
+            traceback.print_exc() # Print the full traceback to the logs
             status_container.update(label="実行失敗", state="error")
             await agent.stop()
 
